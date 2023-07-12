@@ -44,7 +44,8 @@ namespace LinqFirstApp
             Print("\nEvery Products in Tool's category: ", r2);
 
             // Verão do tutor: (Seleciona os que começam com C e Objetos Anônimos):
-            // var r3 = products.Where(p => p.Name[0] = 'C').Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name}); 
+            // var r3 = products.Where(p => p.Name[0] = 'C')
+            // .Select(p => new { p.Name, p.Price, CategoryName = p.Category.Name}); 
             var r3 = products.Where(p => p.Name.StartsWith("C"));
             Print("\nEvery Products starting their name with 'C': ", r3);
 
@@ -74,7 +75,21 @@ namespace LinqFirstApp
             var r14 = products.Where(p => p.Category.Id == 5).Select(p => p.Price).DefaultIfEmpty(0.0).Average();
             Console.WriteLine("\nThe category 5 average prices: R$ " + r14);
 
-            // Montando operações agregadas personalizadas (com map e reduce): 
+            // Montando operações agregadas personalizadas (com map e reduce):
+            var r15 = products.Where(p => p.Category.Id == 5).Select(p => p.Price).Aggregate(0.0, (x, y) => x + y);
+            Console.WriteLine("\nAggregate sum in category 1: R$ " + r15);
+
+            var r16 = products.GroupBy(p => p.Category);
+            foreach (IGrouping<Category, Product> group in r16)
+            {
+                Console.WriteLine("\nCategory: " + group.Key.Name + ": ");
+                foreach (Product product in group)
+                {
+                    Console.WriteLine($"{product}\n");
+                }
+
+            }
+
         }
 
         static void Print<T>(string message, IEnumerable<T> collection)
