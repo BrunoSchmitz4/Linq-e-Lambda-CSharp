@@ -4,12 +4,18 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using LinqFirstApp.Entities;
+using System.Diagnostics;
 
 namespace LinqFirstApp
 {
     class Program
     {
         static void Main(string[] args)
+        {
+            LinqWithLambda();
+        }
+
+        static void LinqWithLambda()
         {
             Category c1 = new Category() { Id = 1, Name = "Tools", Tier = 2 };
             Category c2 = new Category() { Id = 2, Name = "Computers", Tier = 1 };
@@ -50,17 +56,25 @@ namespace LinqFirstApp
             Print("\nAll the tier 1 products ordered by their price, then by their name. It skip 2 and Take 4: ", r5);
 
             var r6 = products.FirstOrDefault();
-            Console.WriteLine("\nThe first one or default: \n" + r6);
-
+            Console.WriteLine("\nThe first one or default: " + r6);
             var r7 = products.Where(p => p.Price > 3000).FirstOrDefault();
-            Console.WriteLine("\nThe first one or default (null): \n" + r7);
-
+            Console.WriteLine("\nThe first one or default (null): " + r7);
             var r8 = products.Where(p => p.Id == 3).SingleOrDefault();
-            Console.WriteLine("\nSingle or default (null): \n" + r8);
-
+            Console.WriteLine("\nSingle or default (null): " + r8);
             var r9 = products.Where(p => p.Id == 30).SingleOrDefault();
-            Console.WriteLine("\nSecond test with Single or default (null): \n" + r9);
+            Console.WriteLine("\nSecond test with Single or default (null): " + r9);
+            var r10 = products.Max(p => p.Price);
+            Console.WriteLine("\nThe expensive one: R$ " + r10);
+            var r11 = products.Min(p => p.Price);
+            Console.WriteLine("\nThe cheapest one: R$ " + r11);
+            var r12 = products.Where(p => p.Category.Id == 1).Sum(p => p.Price);
+            Console.WriteLine("\nAll the category 1 sum prices: R$ " + r12);
+            var r13 = products.Where(p => p.Category.Id == 1).Average(p => p.Price);
+            Console.WriteLine("\nThe category 1 average prices: R$ " + r13);
+            var r14 = products.Where(p => p.Category.Id == 5).Select(p => p.Price).DefaultIfEmpty(0.0).Average();
+            Console.WriteLine("\nThe category 5 average prices: R$ " + r14);
 
+            // Montando operações agregadas personalizadas (com map e reduce): 
         }
 
         static void Print<T>(string message, IEnumerable<T> collection)
